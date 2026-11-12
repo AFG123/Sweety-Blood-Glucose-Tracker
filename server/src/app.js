@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
+const readingRoutes = require('./routes/readingRoutes');
 const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
@@ -24,6 +25,9 @@ app.get('/api/health', (req, res) => {
 
 // Mount Authentication routes
 app.use('/api/v1/auth', authRoutes);
+
+// Mount Readings routes
+app.use('/api/v1/readings', readingRoutes);
 
 // Catch-all for undefined routes
 app.use((req, res) => {
