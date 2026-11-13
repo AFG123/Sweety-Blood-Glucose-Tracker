@@ -29,6 +29,13 @@ export function RecordsView({
 }: RecordsViewProps) {
   const [deletingId, setDeletingId] = React.useState<number | null>(null);
 
+  const todayIST = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
   // Filter readings for selectedDate
   const dailyReadings = readings.filter((r) => r.reading_date === selectedDate);
   const dailySlotsMap = new Map<Reading['slot'], Reading>(dailyReadings.map((r) => [r.slot, r]));
@@ -86,6 +93,7 @@ export function RecordsView({
         <div className="flex items-center space-x-3">
           <input
             type="date"
+            max={todayIST}
             value={selectedDate}
             onChange={(e) => onSelectDate(e.target.value)}
             className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

@@ -17,6 +17,13 @@ export function AnalyticsView({ selectedDate, onSelectDate }: AnalyticsViewProps
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
+  const todayIST = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
   const fetchReport = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -94,6 +101,7 @@ export function AnalyticsView({ selectedDate, onSelectDate }: AnalyticsViewProps
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <input
               type="date"
+              max={todayIST}
               value={selectedDate}
               onChange={(e) => onSelectDate(e.target.value)}
               className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
