@@ -58,7 +58,12 @@ export async function apiRequest<T = any>(
   let response = await fetch(endpoint, config);
 
   // Handle silent token refresh on 401 Unauthorized
-  if (response.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/refresh') && !endpoint.includes('/auth/register')) {
+  if (
+    response.status === 401 &&
+    !endpoint.includes('/auth/login') &&
+    !endpoint.includes('/auth/refresh') &&
+    !endpoint.includes('/auth/register')
+  ) {
     if (!isRefreshing) {
       isRefreshing = true;
 
@@ -98,7 +103,7 @@ export async function apiRequest<T = any>(
     }
   }
 
-  // Parse JSON response
+  // Parse 204 No Content
   if (response.status === 204) {
     return null as T;
   }
@@ -113,6 +118,31 @@ export async function apiRequest<T = any>(
   }
 
   return data;
+}
+
+export interface Reading {
+  id: number;
+  user_id?: number;
+  reading_date: string;
+  slot: 'MORNING_FASTING' | 'AFTER_BREAKFAST' | 'AFTER_LUNCH' | 'AFTER_DINNER';
+  value: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ReportSummary {
+  highest: number | null;
+  lowest: number | null;
+  average: number | null;
+  total_readings: number;
+}
+
+export interface ReportResponse {
+  report_type: 'daily' | 'month_to_date' | 'monthly';
+  start_date: string;
+  end_date: string;
+  summary: ReportSummary;
+  readings?: Reading[];
 }
 
 export const authApi = {
@@ -137,4 +167,57 @@ export const authApi = {
     apiRequest('/api/v1/auth/me', {
       method: 'GET',
     }),
+};
+
+export const readingsApi = {
+  getAll: () =>
+    apiRequest<{ success: boolean; data: { readings: Reading[] } }>('/api/v1/readings', {
+      method: 'GET',
+    }),
+
+  create: (readingData: { reading_date: string; slot: string; value: number }) =>
+    apiRequest<{ success: boolean; message: string; data: { reading: Reading } }>(
+      '/api/v1/readings',
+      {
+        method: 'POST',
+        body: JSON.stringify(readingData),
+      }
+    ),
+
+  update: (
+    id: number,
+    readingData: { reading_date?: string; slot?: string; value?: number }
+  ) =>
+    apiRequest<{ success: boolean; message: string; data: { reading: Reading } }>(
+      `/api/v1/readings/${id}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(readingData),
+      }
+    ),
+
+  delete: (id: number) =>
+    apiRequest<void>(`/api/v1/readings/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
+export const reportsApi = {
+  getDaily: (date: string) =>
+    apiRequest<{ success: boolean; data: ReportResponse }>(
+      `/api/v1/reports/daily?date=${date}`,
+      { method: 'GET' }
+    ),
+
+  getMonthToDate: (date: string) =>
+    apiRequest<{ success: boolean; data: ReportResponse }>(
+      `/api/v1/reports/month-to-date?date=${date}`,
+      { method: 'GET' }
+    ),
+
+  getMonthly: (date: string) =>
+    apiRequest<{ success: boolean; data: ReportResponse }>(
+      `/api/v1/reports/monthly?date=${date}`,
+      { method: 'GET' }
+    ),
 };

@@ -1,9 +1,9 @@
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Auth } from './components/ui/auth-form-1';
-import { Button } from './components/ui/button';
+import { DashboardLayout } from './components/dashboard/DashboardLayout';
 
 function MainApp() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -24,32 +24,7 @@ function MainApp() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <header className="max-w-4xl mx-auto flex items-center justify-between pb-6 border-b border-border">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl">🍬</span>
-          <span className="text-xl font-bold tracking-tight">Sweety</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-muted-foreground">
-            Signed in as <strong className="text-foreground">{user.name}</strong> ({user.email})
-          </span>
-          <Button variant="outline" size="sm" onClick={logout}>
-            Sign Out
-          </Button>
-        </div>
-      </header>
-      <main className="max-w-4xl mx-auto mt-8">
-        <div className="p-8 bg-white border border-border rounded-xl shadow-sm text-center">
-          <h2 className="text-xl font-semibold mb-2">Authentication Successful! 🎉</h2>
-          <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            You are securely authenticated via HttpOnly cookies and CSRF tokens. Ready for the dashboard components.
-          </p>
-        </div>
-      </main>
-    </div>
-  );
+  return <DashboardLayout />;
 }
 
 export default function App() {
