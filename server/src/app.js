@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const readingRoutes = require('./routes/readingRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
@@ -28,6 +29,9 @@ app.use('/api/v1/auth', authRoutes);
 
 // Mount Readings routes
 app.use('/api/v1/readings', readingRoutes);
+
+// Mount Reports routes
+app.use('/api/v1/reports', reportRoutes);
 
 // Catch-all for undefined routes
 app.use((req, res) => {
