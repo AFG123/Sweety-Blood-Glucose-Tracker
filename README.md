@@ -24,13 +24,21 @@ If you want to quickly test the app with pre-filled data, you can use the demo u
 
 ## Setup & Running the Project
 
+
 ### 1. Database Setup (Docker)
 
-Start the PostgreSQL database container (running on port `5433` to avoid any conflicts with local PostgreSQL):
+First, create your environment file from the example:
+
+```bash
+cp .env.example .env
+```
+
+Then start the PostgreSQL database container:
 
 ```bash
 docker compose up -d
 ```
+
 
 ### 2. Backend Setup & Migrations
 
